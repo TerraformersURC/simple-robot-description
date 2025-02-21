@@ -18,8 +18,6 @@
       <material name='blue'/>
     </visual>
 
-    <dynamics damping="0.1" friction="0.05/">
-
     <collision>
       <geometry>
         <box size="0.6 0.4 0.2"/>
@@ -36,7 +34,6 @@
       <material name='white'/>
     </visual>
 
-    <dynamics damping="0.1" friction="0.05/">
 
     <collision>
       <geometry>
@@ -54,7 +51,6 @@
       <material name='white'/>
     </visual>
 
-    <dynamics damping="0.1" friction="0.05/">
 
     <collision>
       <geometry>
@@ -71,7 +67,6 @@
       <origin xyz="0 0 0" rpy="1.57 0 0" />
       <material name='white'/>
     </visual>
-    <dynamics damping="0.1" friction="0.05/">
   </link>
 
   <link name="front_right_wheel">
@@ -82,8 +77,6 @@
       <origin xyz="0 0 0" rpy="1.57 0 0" />
       <material name='white'/>
     </visual>
-
-    <dynamics damping="0.1" friction="0.05/">
 
     <collision>
       <geometry>
@@ -97,7 +90,7 @@
     <child link = "back_right_wheel"/>
     <origin xyz="-0.15 -0.225 0"/>
     <axis xyz="0 1 0"/>
-    <dynamics damping="0.1" friction="0.05/">
+    <dynamics damping="0.1" friction="0.05"/>
   </joint>
 
   <joint name="back_left_wheel_joint" type="continuous">
@@ -105,7 +98,7 @@
     <child link = "back_left_wheel"/>
     <origin xyz="-0.15 0.225 0"/>
     <axis xyz="0 1 0"/>
-    <dynamics damping="0.1" friction="0.05/">
+    <dynamics damping="0.1" friction="0.05"/>
   </joint>
 
   <joint name="front_left_wheel_joint" type="continuous">
@@ -113,7 +106,7 @@
     <child link = "front_left_wheel"/>
     <origin xyz="0.15 0.225 0"/>
     <axis xyz="0 1 0"/>
-    <dynamics damping="0.1" friction="0.05/">
+    <dynamics damping="0.1" friction="0.05"/>
   </joint>
 
   <joint name="front_right_wheel_joint" type="continuous">
@@ -121,7 +114,7 @@
     <child link = "front_right_wheel"/>
     <origin xyz="0.15 -0.225 0"/>
     <axis xyz="0 1 0"/>
-    <dynamics damping="0.1" friction="0.05/">
+    <dynamics damping="0.1" friction="0.05"/>
   </joint>
 
 </robot>
