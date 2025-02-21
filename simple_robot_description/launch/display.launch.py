@@ -1,35 +1,36 @@
+import os
+
+from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
-from launch_ros.substitutions import FindPackageShare
+from launch.substitutions import Command
+from launch_ros.actions import Node
 
-
+# this is the function launch  system will look for
 def generate_launch_description():
-    ld = LaunchDescription()
 
-    urdf_tutorial_path = FindPackageShare('urdf_tutorial')
-    default_model_path = PathJoinSubstitution(['urdf', 'new_rover.urdf'])
-    default_rviz_config_path = PathJoinSubstitution([urdf_tutorial_path, 'rviz', 'urdf.rviz'])
+    ####### DATA INPUT ##########
+    urdf_file = 'simple_rover.urdf'
+    #xacro_file = "urdfbot.xacro"
+    package_description = "simple_robot_description"
 
-    # These parameters are maintained for backwards compatibility
-    gui_arg = DeclareLaunchArgument(name='gui', default_value='true', choices=['true', 'false'],
-                                    description='Flag to enable joint_state_publisher_gui')
-    ld.add_action(gui_arg)
-    rviz_arg = DeclareLaunchArgument(name='rvizconfig', default_value=default_rviz_config_path,
-                                     description='Absolute path to rviz config file')
-    ld.add_action(rviz_arg)
+    ####### DATA INPUT END ##########
+    print("Fetching URDF ==>")
+    robot_desc_path = os.path.join(get_package_share_directory(package_description), "urdf", urdf_file)
 
-    # This parameter has changed its meaning slightly from previous versions
-    ld.add_action(DeclareLaunchArgument(name='model', default_value=default_model_path,
-                                        description='Path to robot urdf file relative to urdf_tutorial package'))
+    # Robot State Publisher
 
-    ld.add_action(IncludeLaunchDescription(
-        PathJoinSubstitution([FindPackageShare('urdf_launch'), 'launch', 'display.launch.py']),
-        launch_arguments={
-            'urdf_package': 'urdf_tutorial',
-            'urdf_package_path': LaunchConfiguration('model'),
-            'rviz_config': LaunchConfiguration('rvizconfig'),
-            'jsp_gui': LaunchConfiguration('gui')}.items()
-    ))
+    robot_state_publisher_node = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher_node',
+        emulate_tty=True,
+        parameters=[{'use_sim_time': True, 'robot_description': Command(['xacro ', robot_desc_path])}],
+        output="screen"
+    )
 
-    return ld
+    # create and return launch description object
+    return LaunchDescription(
+        [            
+            robot_state_publisher_node
+        ]
+    )
