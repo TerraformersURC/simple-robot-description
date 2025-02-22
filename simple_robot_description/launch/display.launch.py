@@ -15,7 +15,9 @@ def generate_launch_description():
 
     ####### DATA INPUT END ##########
     print("Fetching URDF ==>")
-    robot_desc_path = os.path.join(get_package_share_directory(package_description), "urdf", urdf_file)
+
+    pkg_share = get_package_share_directory(package_description)
+    robot_desc_path = os.path.join(pkg_share, "urdf", urdf_file)
 
     # Robot State Publisher
 
@@ -24,13 +26,37 @@ def generate_launch_description():
         executable='robot_state_publisher',
         name='robot_state_publisher_node',
         emulate_tty=True,
-        parameters=[{'use_sim_time': True, 'robot_description': Command(['xacro ', robot_desc_path])}],
+
+        parameters=[{
+        'use_sim_time': True, 
+        'robot_description': open(robot_desc_path).read()
+        }],
+
         output="screen"
+    )
+
+    # Joint State Publisher
+
+    joint_state_publisher_node = Node(
+        package='joint_state_publisher',
+        executable='joint_state_publisher',
+        name='joint_state_publisher_node'
+    )
+
+    # RViz Node
+    rviz_config_file = os.path.join(pkg_share, 'rviz', 'urdf.rviz')
+    rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        arguments=['-d', rviz_config_file],
+        output='screen'
     )
 
     # create and return launch description object
     return LaunchDescription(
         [            
-            robot_state_publisher_node
+            robot_state_publisher_node,
+            joint_state_publisher_node,
+            rviz_node
         ]
     )
